@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>APavan SST – Engenharia de Segurança do Trabalho</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --azul:#0b3c5d;
+  --cinza:#f4f6f8;
+}
+
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--cinza);
+  color:#222;
+}
+
+header{
+  background:var(--azul);
+  color:#fff;
+  padding:15px;
+  text-align:center;
+}
+
+main{
+  max-width:900px;
+  margin:auto;
+  padding:15px;
+}
+
+section{
+  background:#fff;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:8px;
+  box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+
+#galeriaFotos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#galeriaFotos img {
+  width: 150px;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+h2{
+  color:var(--azul);
+  margin-top:0;
+}
+
+input, textarea, select{
+  width:100%;
+  padding:8px;
+  margin-top:5px;
+  margin-bottom:10px;
+  box-sizing:border-box;
+}
+
+label{
+  display:block;
+  margin-bottom:10px;
+}
+
+button{
+  background:var(--azul);
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+  width:100%;
+  margin-top:5px;
+}
+
+select.conforme{background:#e6f4ea;}
+select.nao-conforme{background:#fff8e1;}
+select.risco-grave{background:#fdecea;}
+
+#galeria{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:10px;
+}
+
+#galeria img{
+  width:100%;
+  border-radius:6px;
+  border:2px solid #ccc;
+}
+
+pre{
+  white-space:pre-wrap;
+  background:#f0f8ff;
+  padding:10px;
+  border-left:4px solid var(--azul);
+}
+
+canvas{
+  border:1px solid #ccc;
+  border-radius:6px;
+  background:#fff;
+}
+
+.item-historico{
+  background:#eee;
+  padding:10px;
+  border-radius:6px;
+  margin-bottom:8px;
+}
+
+@media print{
+  button,input[type=file]{display:none;}
+  body{background:#fff;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>APavan SST</h1>
+<p>Engenharia de Segurança do Trabalho</p>
+</header>
+
+<main>
+
+<!-- DADOS -->
+<section>
+<h2>📋 Identificação da Obra / Empresa</h2>
+<input id="empresa" placeholder="Empresa / Obra">
+<input id="responsavel" placeholder="Responsável Técnico">
+</section>
+
+<!-- NR-18 -->
+<section>
+<h2>🏗 Checklist NR-18 – Construção Civil</h2>
+
+<label>Proteções coletivas (guarda-corpo, rodapé)
+<select class="avaliacao">
+<option value="conforme">Conforme</option>
+<option value="nao-conforme">Não Conforme</option>
+<option value="risco-grave">Risco Grave</option>
+</select></label>
+
+<label>Sinalização de segurança
+<select class="avaliacao">
+<option value="conforme">Conforme</option>
+<option value="nao-conforme">Não Conforme</option>
+<option value="risco-grave">Risco Grave</option>
+</select></label>
+
+<label>Organização e limpeza do canteiro
+<select class="avaliacao">
+<option value="conforme">Conforme</option>
+<option value="nao-conforme">Não Conforme</option>
+<option value="risco-grave">Risco Grave</option>
+</select></label>
+
+</section>
+
+<!-- NR-35 -->
+<section>
+<h2>🧗 Checklist NR-35 – Trabalho em Altura</h2>
+
+<label>Análise de Risco (AR)
+<select class="avaliacao">
+<option value="conforme">Conforme</option>
+<option value="nao-conforme">Não Conforme</option>
+<option value="risco-grave">Risco Grave</option>
+</select></label>
+
+<label>Uso correto de EPI
+<select class="avaliacao">
+<option value="conforme">Conforme</option>
+<option value="nao-conforme">Não Conforme</option>
+<option value="risco-grave">Risco Grave</option>
+</select></label>
+
+<label>Sistema de ancoragem
+<select class="avaliacao">
+<option value="conforme">Conforme</option>
+<option value="nao-conforme">Não Conforme</option>
+<option value="risco-grave">Risco Grave</option>
+</select></label>
+
+</section>
+
+<!-- FOTOS -->
+<section>
+  <h2>📷 Registro Fotográfico</h2>
+
+  <input type="file" accept="image/*" onchange="adicionarFoto(event)">
+
+  <div id="galeriaFotos"></div>
+</section>
+
+
+<!-- OBS -->
+<section>
+<h2>📝 Observações Técnicas</h2>
+<textarea id="observacoes" rows="4"></textarea>
+</section>
+
+<!-- CONCLUSÃO -->
+<section>
+<h2>🤖 Conclusão Técnica (Assistente IA)</h2>
+<button onclick="gerarConclusao()">Gerar Conclusão Técnica</button>
+<pre id="saidaIA"></pre>
+</section>
+
+<!-- ASSINATURA -->
+<section>
+<h2>✍️ Assinatura do Responsável Técnico</h2>
+<canvas id="assinatura" width="300" height="150"></canvas>
+<button onclick="limparAssinatura()">Limpar Assinatura</button>
+</section>
+
+<!-- HISTÓRICO -->
+<section>
+<h2>📚 Histórico de Laudos</h2>
+<button onclick="salvarLaudo()">Salvar Laudo no Histórico</button>
+<div id="historico"></div>
+</section>
+
+<!-- PDF -->
+<section>
+<h2>📄 Emissão do Laudo</h2>
+<button onclick="window.print()">Gerar PDF do Laudo</button>
+</section>
+
+</main>
+
+<footer style="text-align:center;padding:10px">
+© APavan Engenharia – Eng. Ademilton Pavan – CREA-SC 86959-8
+</footer>
+
+<script>
+/* Fotos */
+fotos.onchange=e=>{
+  galeria.innerHTML="";
+  [...e.target.files].forEach(f=>{
+    const r=new FileReader();
+    r.onload=()=>{const i=document.createElement("img");i.src=r.result;galeria.appendChild(i);}
+    r.readAsDataURL(f);
+  });
+};
+
+
+function adicionarFoto(event) {
+  const arquivo = event.target.files[0];
+  if (!arquivo) return;
+
+  const leitor = new FileReader();
+  leitor.onload = function () {
+    const img = document.createElement("img");
+    img.src = leitor.result;
+    document.getElementById("galeriaFotos").appendChild(img);
+  };
+  leitor.readAsDataURL(arquivo);
+
+  // limpa o input para permitir nova foto
+  event.target.value = "";
+}
+
+
+
+/* Assinatura */
+const c=assinatura,ctx=c.getContext("2d");
+let d=false;
+c.onmousedown=e=>{d=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);}
+c.onmousemove=e=>{if(d){ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();}}
+c.onmouseup=()=>d=false;
+function limparAssinatura(){ctx.clearRect(0,0,c.width,c.height);}
+
+/* Conclusão */
+function gerarConclusao(){
+  let conf=0,nc=0,rg=0;
+  document.querySelectorAll(".avaliacao").forEach(s=>{
+    s.className="avaliacao "+s.value;
+    if(s.value=="conforme")conf++;
+    if(s.value=="nao-conforme")nc++;
+    if(s.value=="risco-grave")rg++;
+  });
+
+  let nivel="CONFORME";
+  let rec="Manter condições de segurança.";
+  if(rg>0){nivel="RISCO GRAVE E IMINENTE";rec="Interdição imediata recomendada.";}
+  else if(nc>0){nivel="NÃO CONFORME";rec="Correções obrigatórias recomendadas.";}
+
+  saidaIA.innerText=
+`Empresa/Obra: ${empresa.value}
+Responsável Técnico: ${responsavel.value}
+
+Itens conformes: ${conf}
+Itens não conformes: ${nc}
+Itens com risco grave: ${rg}
+
+Classificação Geral: ${nivel}
+
+Conclusão Técnica:
+${rec}
+
+Observações:
+${observacoes.value}`;
+}
+
+/* Histórico */
+function salvarLaudo(){
+  const h=JSON.parse(localStorage.getItem("sst"))||[];
+  h.push({empresa:empresa.value,data:new Date().toLocaleString(),texto:saidaIA.innerText});
+  localStorage.setItem("sst",JSON.stringify(h));
+  carregar();
+}
+
+function carregar(){
+  historico.innerHTML="";
+  (JSON.parse(localStorage.getItem("sst"))||[]).forEach(l=>{
+    historico.innerHTML+=`<div class="item-historico"><b>${l.empresa}</b><br>${l.data}</div>`;
+  });
+}
+carregar();
+</script>
+
+</body>
+</html>
